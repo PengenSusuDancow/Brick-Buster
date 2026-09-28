@@ -3,7 +3,7 @@ SAD Assessment 2 Github Repository for Brick buster
 
 zID/ Group Member/ Roles:
 1. z5651439/ Nugroho/ Project Management and Requirements
-2.
+2. z5612086/ Suhamri/
 3.
 4.
 
