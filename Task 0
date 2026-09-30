@@ -1,0 +1,14 @@
+Timeline: 23 September → 16 October
+
+Date	Task	Main Person	Support
+23–24 Sep	GitHub setup + Task 0 Gantt chart	Arghi	Everyone
+24–28 Sep	Task 1 Rebrickable CSV analysis	Numan	Ruth
+28 Sep–1 Oct	Task 2 requirements + use cases	Arghi	Jack
+1–5 Oct	Task 3 database/class/UI designs	Numan + Jack	Everyone
+5–6 Oct	Design review before coding	Everyone	—
+6–11 Oct	Core Python + SQLite implementation	Ruth + Jack	Numan
+11–13 Oct	Integrate GUI + database + functionality	Jack + Ruth	Everyone
+13–14 Oct	Testing + bug fixing	Everyone	—
+15 Oct	Final documentation + Moodle package	Arghi	Everyone
+16 Oct	SUBMIT	Everyone checks	Arghi submits
+Before Week 13	Presentation + demo practice	Everyone
