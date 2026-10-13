@@ -1,4 +1,4 @@
-#Task 1 CSV Analysis
+## Task 1 CSV Analysis
 
 **Lead:** Suhamri, Taccad 
 **Status:** In progress 
@@ -6,7 +6,7 @@
 This document analyses the supplied Rebrickable CSV files
 and records the differences from Figure 4 in the assignment.
 
-##What the files actually contain: 
+## What the files actually contain: 
   File/table          | Data rows | Proposed primary key |
 | colors              | 275       | id                   |
 | elements            | 114,315   | element_id           |
@@ -29,8 +29,10 @@ inventory_parts.csv  |  img_url
 elements.csv  |  design_id
 colors.csv  |  num_parts, num_sets, y1, y2
 
-UML class diagram
-themes {
+## Source database ER diagram 
+```mermaid 
+erDiagram 
+themes { 
     integer id PK
     text name
     integer parent_id FK "blank for root themes"
@@ -114,3 +116,26 @@ colors {
     integer y1 "blank values observed"
     integer y2 "blank values observed"
 }
+themes |o--o{ themes : parent_id
+    themes ||--o{ sets : theme_id
+    sets |o..o{ inventories : "set owner (XOR)"
+    minifigs |o..o{ inventories : "minifigure owner (XOR)"
+    inventories ||--o{ inventory_parts : inventory_id
+    parts ||--o{ inventory_parts : part_num
+    colors ||--o{ inventory_parts : color_id
+    inventories ||--o{ inventory_sets : inventory_id
+    sets ||--o{ inventory_sets : set_num
+    inventories ||--o{ inventory_minifigs : inventory_id
+    minifigs ||--o{ inventory_minifigs : fig_num
+    part_categories ||--o{ parts : part_cat_id
+    parts ||--o{ elements : part_num
+    colors ||--o{ elements : color_id
+    parts ||--o{ part_relationships : child_part_num
+    parts ||--o{ part_relationships : parent_part_num
+```
+Each inventory belongs to exactly one set OR one minifigure.
+The two owner relationships are exclusive alternatives (XOR),
+not two simultaneously enforced SQL foreign keys.
+
+Fields marked PK together form one composite primary key.
+Keys and relationships are proposed from analysis of the CSV data.
