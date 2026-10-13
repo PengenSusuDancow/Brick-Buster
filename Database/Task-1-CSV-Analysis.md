@@ -1,7 +1,7 @@
 ## Task 1 CSV Analysis
 
 **Lead:** Suhamri, Taccad 
-**Status:** In progress 
+**Status:** Reviewed
 
 This document analyses the supplied Rebrickable CSV files
 and records the differences from Figure 4 in the assignment.
