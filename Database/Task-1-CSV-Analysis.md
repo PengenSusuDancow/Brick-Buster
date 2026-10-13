@@ -137,9 +137,30 @@ themes |o--o{ themes : parent_id
     parts ||--o{ part_relationships : child_part_num
     parts ||--o{ part_relationships : parent_part_num
 ```
-Each inventory belongs to exactly one set OR one minifigure.
-The two owner relationships are exclusive alternatives (XOR),
-not two simultaneously enforced SQL foreign keys.
+### Key and relationship explanations 
+- `inventory_parts` uses the composite key
+  `(inventory_id, part_num, color_id, is_spare)`.
+  Including `is_spare` distinguishes normal and spare entries
+  for the same part and colour in an inventory.
+- `inventories.set_num` can identify either a set or a minifigure.
+  This differs from Figure 4, which shows only the set relationship.
+- `inventory_sets.set_num` identifies a set contained in an
+  inventory, rather than the inventory's owner.
+- `themes.parent_id` is optional because root themes have no parent.
+- Set, part and minifigure identifiers are stored as text to
+  preserve letters, hyphens and leading zeroes.
 
-Fields marked PK together form one composite primary key.
-Keys and relationships are proposed from analysis of the CSV data.
+### Diagram notation
+
+- PK means primary key; FK means foreign key.
+- Multiple PK fields together form one composite key.
+- `||` means exactly one; `o|` means zero or one;
+  `o{` means zero or many.
+- The two inventory-owner relationships are exclusive alternatives:
+  each inventory belongs to exactly one set OR one minifigure.
+
+### Scope
+
+This diagram models the supplied Rebrickable CSV data.
+The application's collection tables belong to Task 3.
+  
