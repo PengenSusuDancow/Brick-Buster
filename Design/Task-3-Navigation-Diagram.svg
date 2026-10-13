@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1140" viewBox="0 0 1500 1140">
+<title>04  Window navigation</title>
+<defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10" fill="none" stroke="#000000"/></marker></defs>
+<rect x="0" y="0" width="1500" height="1140" rx="0" fill="#ffffff" stroke="#ffffff"/>
+<text x="36" y="64" font-family="Arial, sans-serif" font-size="26" font-weight="bold" fill="#000000">04  Window navigation</text>
+<text x="36" y="91" font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#000000">Solid arrows show available actions; guards determine when transitions are permitted. S07 is a panel within S06.</text>
+<polyline points="540,197 225,197 225,325" fill="none" stroke="#000000" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="270" y="185" font-family="Arial, sans-serif" font-size="12" font-weight="normal" fill="#000000">Import</text>
+<polyline points="730,221 730,325" fill="none" stroke="#000000" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="744" y="274" font-family="Arial, sans-serif" font-size="12" font-weight="normal" fill="#000000">Collection</text>
+<polyline points="920,197 1245,197 1245,325" fill="none" stroke="#000000" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="1030" y="182" font-family="Arial, sans-serif" font-size="12" font-weight="normal" fill="#000000">Piece query [ready]</text>
+<polyline points="540,174 25,174 25,985 50,985" fill="none" stroke="#000000" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="45" y="894" font-family="Arial, sans-serif" font-size="12" font-weight="normal" fill="#000000">Build [ready]</text>
+<polyline points="600,221 445,221 445,572 220,572 220,635" fill="none" stroke="#000000" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="60" y="555" font-family="Arial, sans-serif" font-size="12" font-weight="normal" fill="#000000">Search [ready]</text>
+<polyline points="600,406 600,500 225,500 225,635" fill="none" stroke="#000000" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="253" y="486" font-family="Arial, sans-serif" font-size="12" font-weight="normal" fill="#000000">Add set [ready]</text>
+<polyline points="730,406 730,635" fill="none" stroke="#000000" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="742" y="555" font-family="Arial, sans-serif" font-size="12" font-weight="normal" fill="#000000">Update selected</text>
+<polyline points="920,383 1035,383 1035,550 1250,550 1250,635" fill="none" stroke="#000000" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="1110" y="534" font-family="Arial, sans-serif" font-size="12" font-weight="normal" fill="#000000">Remove selected</text>
+<polyline points="400,692 540,692" fill="none" stroke="#000000" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="410" y="681" font-family="Arial, sans-serif" font-size="12" font-weight="normal" fill="#000000">Add selected</text>
+<polyline points="730,635 730,587 990,587 990,450 870,450 870,406" fill="none" stroke="#000000" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="833" y="436" font-family="Arial, sans-serif" font-size="12" font-weight="normal" fill="#000000">Save / cancel*</text>
+<polyline points="1070,710 1010,710 1010,475 895,475 895,406" fill="none" stroke="#000000" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="1085" y="747" font-family="Arial, sans-serif" font-size="12" font-weight="normal" fill="#000000">Confirm / cancel</text>
+<polyline points="225,738 225,960" fill="none" stroke="#000000" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="238" y="857" font-family="Arial, sans-serif" font-size="12" font-weight="normal" fill="#000000">Use as target [selected]</text>
+<polyline points="90,960 90,815 115,815 115,738" fill="none" stroke="#000000" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="40" y="797" font-family="Arial, sans-serif" font-size="12" font-weight="normal" fill="#000000">Choose target</text>
+<polyline points="470,1015 630,1015" fill="none" stroke="#000000" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="480" y="999" font-family="Arial, sans-serif" font-size="12" font-weight="normal" fill="#000000">[shortages] View</text>
+<polyline points="630,1060 470,1060" fill="none" stroke="#000000" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="535" y="1077" font-family="Arial, sans-serif" font-size="12" font-weight="normal" fill="#000000">Back</text>
+<rect x="540" y="140" width="380" height="80" rx="0" fill="#ffffff" stroke="#000000"/>
+<rect x="540" y="140" width="380" height="37" rx="0" fill="#ffffff" stroke="#000000"/>
+<text x="552" y="165" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#000000">S01  Home</text>
+<text x="552" y="199" font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#000000">Catalogue readiness gates actions.</text>
+<rect x="50" y="325" width="350" height="103" rx="0" fill="#ffffff" stroke="#000000"/>
+<rect x="50" y="325" width="350" height="37" rx="0" fill="#ffffff" stroke="#000000"/>
+<text x="62" y="350" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#000000">S02  Import data - UC01</text>
+<text x="62" y="384" font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#000000">Browse -&gt; validate -&gt; atomic import</text>
+<text x="62" y="407" font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#000000">Success / error stays on S02.</text>
+<rect x="540" y="325" width="380" height="80" rx="0" fill="#ffffff" stroke="#000000"/>
+<rect x="540" y="325" width="380" height="37" rx="0" fill="#ffffff" stroke="#000000"/>
+<text x="552" y="350" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#000000">S03  My collection - UC04</text>
+<text x="552" y="384" font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#000000">Select owned entry for update/remove.</text>
+<rect x="1070" y="325" width="380" height="80" rx="0" fill="#ffffff" stroke="#000000"/>
+<rect x="1070" y="325" width="380" height="37" rx="0" fill="#ffffff" stroke="#000000"/>
+<text x="1082" y="350" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#000000">S05  Piece query - UC07</text>
+<text x="1082" y="384" font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#000000">Select part + colour -&gt; quantity / error.</text>
+<rect x="50" y="635" width="350" height="103" rx="0" fill="#ffffff" stroke="#000000"/>
+<rect x="50" y="635" width="350" height="37" rx="0" fill="#ffffff" stroke="#000000"/>
+<text x="62" y="660" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#000000">S04  Search / filter - UC02</text>
+<text x="62" y="694" font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#000000">Caller context: standalone / add / target</text>
+<text x="62" y="717" font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#000000">Choose selected set; no match stays here.</text>
+<rect x="540" y="635" width="380" height="103" rx="0" fill="#ffffff" stroke="#000000"/>
+<rect x="540" y="635" width="380" height="37" rx="0" fill="#ffffff" stroke="#000000"/>
+<text x="552" y="660" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#000000">D01  Quantity - UC03 / UC05</text>
+<text x="552" y="694" font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#000000">Add: increment / Update: replace</text>
+<text x="552" y="717" font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#000000">Save valid -&gt; collection; invalid -&gt; stay</text>
+<rect x="1070" y="635" width="380" height="103" rx="0" fill="#ffffff" stroke="#000000"/>
+<rect x="1070" y="635" width="380" height="37" rx="0" fill="#ffffff" stroke="#000000"/>
+<text x="1082" y="660" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#000000">D02  Removal - UC06</text>
+<text x="1082" y="694" font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#000000">Confirm -&gt; delete -&gt; collection</text>
+<text x="1082" y="717" font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#000000">Cancel -&gt; collection unchanged</text>
+<rect x="50" y="960" width="420" height="103" rx="0" fill="#ffffff" stroke="#000000"/>
+<rect x="50" y="960" width="420" height="37" rx="0" fill="#ffffff" stroke="#000000"/>
+<text x="62" y="985" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#000000">S06 + S07  Build checker - UC08</text>
+<text x="62" y="1019" font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#000000">Select target -&gt; check -&gt; result panel</text>
+<text x="62" y="1042" font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#000000">Buildable / not buildable / data error</text>
+<rect x="630" y="960" width="440" height="103" rx="0" fill="#ffffff" stroke="#000000"/>
+<rect x="630" y="960" width="440" height="37" rx="0" fill="#ffffff" stroke="#000000"/>
+<text x="642" y="985" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#000000">S08  Missing report - UC09</text>
+<text x="642" y="1019" font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#000000">Only after successful check with shortage</text>
+<text x="642" y="1042" font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#000000">Back returns to current build result</text>
+<rect x="1100" y="850" width="350" height="241" rx="0" fill="#ffffff" stroke="#000000"/>
+<rect x="1100" y="850" width="350" height="37" rx="0" fill="#ffffff" stroke="#000000"/>
+<text x="1112" y="875" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#000000">Global navigation / feedback</text>
+<text x="1112" y="909" font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#000000">Main screens: Home -&gt; S01.</text>
+<text x="1112" y="932" font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#000000">Back restores caller and criteria.</text>
+<text x="1112" y="955" font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#000000">*Add cancel -&gt; search (S04).</text>
+<text x="1112" y="978" font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#000000">Update cancel -&gt; collection (S03).</text>
+<text x="1112" y="1001" font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#000000">Validation error -&gt; stay + explain.</text>
+<text x="1112" y="1024" font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#000000">Successful writes refresh collection.</text>
+<text x="1112" y="1047" font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#000000">Edits/import invalidate old results.</text>
+<text x="1112" y="1070" font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#000000">No error transition to report.</text>
+</svg>

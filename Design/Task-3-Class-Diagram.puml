@@ -1,0 +1,112 @@
+@startuml
+skinparam defaultFontName Arial
+skinparam monochrome true
+title Task 3 - Brick Buster Python class design
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam linetype ortho
+class BrickBusterApp {
+  - services; session_result: BuildResult?
+  + show_screen(screen, context)
+  + on_collection_or_import_change()
+  + show_feedback(kind, message)
+}
+class Screens {
+  - current_screen: str; context: dict
+  - widgets: dict[str, Widget]
+  + show(screen_id, context); back()
+  + submit(action, fields); render_state(state)
+}
+class DatabaseManager {
+  - path: Path; generation: int
+  + transaction(); read(query, params)
+  + catalogue_ready(): bool
+  + commit(); rollback(); close()
+}
+class DataImporter {
+  - db: DatabaseManager
+  + validate_files(folder)
+  + stage_and_validate_graph(folder)
+  + normalize_inventory_ownership()
+  + publish_atomically()
+}
+class SetService {
+  - db: DatabaseManager
+  + search_sets(text, theme?, year?)
+  + get_set(set_num)
+  + list_themes(); list_years()
+}
+class CollectionService {
+  - db; resolver: InventoryResolver
+  + add_set(set_num, quantity)
+  + list_owned_sets()
+  + update_quantity(set_num, quantity)
+  + remove_set(set_num)
+  + get_piece_quantity(part_num, color_id)
+}
+class BuildService {
+  - collection; resolver: InventoryResolver
+  + check_target(set_num): BuildResult
+  + missing_items(result): list[Shortage]
+}
+class InventoryResolver {
+  - db: DatabaseManager
+  + select_inventory(owner): Inventory
+  + resolve_set(set_num, path): ItemPool
+  + aggregate_owned(entries): ItemPool
+  + validate_disjoint_contents(inventory)
+}
+class BuildResult {
+  + target: str; status: BuildStatus
+  + generation: int
+  + rows: list[Shortage]
+}
+class ItemPool {
+  + parts: dict[tuple[str, int], int]
+  + minifigs: dict[str, int]
+  + scaled(copies): ItemPool
+  + add(other: ItemPool)
+}
+class Shortage {
+  + item_type: str; identifier: str
+  + name: str; color: str?
+  + required: int; available: int
+  + missing: int
+}
+BrickBusterApp "1" *-- "1" Screens
+BrickBusterApp --> DataImporter
+BrickBusterApp --> SetService
+BrickBusterApp --> CollectionService
+BrickBusterApp --> BuildService
+DataImporter --> DatabaseManager
+SetService --> DatabaseManager
+CollectionService --> DatabaseManager
+CollectionService --> InventoryResolver
+BuildService --> CollectionService
+BuildService --> InventoryResolver
+InventoryResolver --> DatabaseManager
+BuildService ..> BuildResult : produces
+InventoryResolver ..> ItemPool : produces
+BuildResult "1" *-- "0..*" Shortage : rows
+note bottom of Screens
+  See wireframe IDs S01-S08 and D01-D02.
+  UC09 extends UC08 only when there are shortages.
+  Screens call services via app event handlers.
+end note
+note bottom of InventoryResolver
+  Choose one max-version inventory per owner.
+  Validate graph, path cycles and direct/nested provenance.
+  Memoize one-copy set pools; multiply along each edge.
+  Aggregate complete fig_num counts; do not expand figures.
+  Missing or ambiguous data raises DataError.
+end note
+note bottom of BuildService
+  required = resolver.resolve_set(target) for one copy.
+  available = resolver.aggregate_owned(collection.list_owned_sets()).
+  missing = max(required - available, 0).
+  Buildable only if every shortage is zero.
+  Invalidate result after collection edits or successful import.
+  BuildStatus = BUILDABLE / NOT_BUILDABLE.
+  DataError or ValidationError gives a message, not a result.
+end note
+@enduml
