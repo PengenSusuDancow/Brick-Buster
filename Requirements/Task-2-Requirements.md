@@ -40,8 +40,9 @@ Brick Buster helps a LEGO collector manage complete owned sets, query available 
 
 ## Business rules and scope
 
-- All sets in the supplied collection are complete. Repeated booklets represent additional owned copies.
-- A set’s contribution is multiplied by its owned copy quantity. Multiple booklets belonging to one copy must not be counted again during collection entry.
+- This version assumes owned sets are complete.
+- Owned copy quantities are entered by the user. Multiple instruction booklets do not by themselves establish how many copies are owned.
+- A set’s contribution is multiplied by its owned copy quantity.
 - Parts match exactly by part number and colour. Substitutions are excluded.
 - Minifigures match exactly by `fig_num` and are counted as complete figures. Their component parts are not also added to the loose-part pool.
 - Spare parts are excluded. Pieces from assembled sets are available for reuse, which may require dismantling those sets.
