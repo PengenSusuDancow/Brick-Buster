@@ -17,4 +17,4 @@ From the repository folder, run:
     python src/main.py
 
 On first launch, open Import Rebrickable data and select the folder containing the supplied CSV or CSV ZIP files.
-The SQLite database is created automatically in data/.
+The SQLite database is created automatically in data. 
