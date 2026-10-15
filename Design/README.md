@@ -27,7 +27,7 @@ img_url TEXT NOT NULL DEFAULT '' exists on sets, minifigs and inventory_parts. I
 
 Indexes cover inventory set ownership/version, figure ownership/version, and part image lookup by part/colour. Theme parent references are deferred. Every connection enables foreign keys. The local database defaults to data/brick_buster.sqlite3; main.py --db can select another path. Thumbnails live in image_cache beside that database, not in SQL image blobs.
 
-##Import and Image Enrichment
+## Import and Image Enrichment
 For each of nine tables, DataImporter requires exactly one <table>.csv or <table>.csv.zip in the chosen folder. A table ZIP must contain exactly one corresponding CSV. The nine tables are themes, colors, parts, sets, minifigs, inventories, inventory_parts, inventory_minifigs and inventory_sets. This is distinct from the image-enrichment action that accepts one original all_downloads.zip containing the three image-bearing CSV files.
 
 Full import validates headers, parses integers and source booleans, resolves owner membership and replaces the catalogue inside BEGIN IMMEDIATE. It temporarily saves and removes owned rows, reloads the catalogue, restores ownership, checks foreign keys and detects theme/latest-inventory nested-set cycles. Only then does it mark ready and increment generation. Failure rolls back to the previous catalogue and collection. A failed first import leaves readiness false. Removing an owned set from a replacement catalogue fails the reference check rather than silently losing ownership.
@@ -37,7 +37,7 @@ load_image_urls(db, archive_path) is a module-level function in importer.py. It 
 
 Both import actions run in a background worker with a separate DatabaseManager connection. A queue transfers progress/results back to Tkinter. While busy, the import inputs are disabled and navigation/closing is blocked. After completion, feedback is shown on the same Import screen.
 
-##Classes and Image Architecture
+## Classes and Image Architecture
 BrickBusterApp constructs DatabaseManager, InventoryResolver, SetService, CollectionService, BuildService, Screens and one shared ImageLoader. It owns a shared tk.StringVar view mode, initially List, and the current session result. Screen methods remain methods of BrickBusterApp rather than separate screen classes. Screens stores the current screen, context dictionary, navigation history and widget references.
 
 SetService performs search and filter operations. A recursive theme query includes descendant themes. CollectionService handles ownership changes and available piece totals. InventoryResolver provides one consistent interpretation of selected inventories. BuildService compares target and owned pools. ItemPool uses Counter objects; BuildResult and Shortage are dataclasses. Shortage.color is a string, with '-' used for complete minifigures. positive_quantity(value) is a module function that rejects nonpositive, noninteger, non-ASCII decimal and out-of-range input before writes.
@@ -66,7 +66,7 @@ Home and Back are created on main screens. Back depends on history, not the scre
 
 Collection mutation and successful full import clear session_result. A new build check clears the old result before calculation. Choosing a different target does not immediately erase the stored object, but the build screen only displays it when the target matches. The missing report checks catalogue generation. Its UI entry button appears only for NOT_BUILDABLE. This documents actual state handling rather than the earlier proposal of unconditional invalidation on target selection.
 
-##Worked calculations matching the code
+## Worked calculations matching the code
 
 The following examples use the small synthetic catalogue in `Testing/test_brick_buster.py`, not the full Rebrickable dataset. A-1 has version 1 with 99 red p1 parts and version 2 with 3 non-spare red p1 parts, 10 spare red p1 parts and one complete fig-1. Version 2 is selected; version 1 and spares do not contribute. Although fig-1 has a component inventory containing p2, those components are not added to the loose-part pool.
 
