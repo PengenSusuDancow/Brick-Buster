@@ -6,6 +6,10 @@
 This document analyses the supplied Rebrickable CSV files
 and records the differences from Figure 4 in the assignment.
 
+### Dataset source and actual local download date
+
+Publisher: Rebrickable. Official listing: [https://rebrickable.com/downloads/](https://rebrickable.com/downloads/). The inspected source is the supplied all_downloads.zip, also retained as src/all_downloads.zip. Its recorded source URL is https://cdn.rebrickable.com/media/downloads/all_downloads.zip.
+
 ### What the files actually contain: 
 | CSV table | Data rows | Selected logical primary key |
 | --- | --- | --- |
