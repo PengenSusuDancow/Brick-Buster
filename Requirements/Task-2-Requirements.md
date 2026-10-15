@@ -2,16 +2,19 @@
 
 Project:Brick Buster — ZEIT2105 Assignment 2  
 Status:Final — approved by the team  
-Prepared:13 October 2026   
+Prepared: 13 October 2026   
+Revised: 15 October 2026
 Author:Sazmi
 
 ## Purpose and actor
 
-Brick Buster helps a LEGO collector manage complete owned sets, query available pieces, and check whether the collection can build a selected target set. The application will use Python, a graphical interface, and a local SQLite database populated from Rebrickable CSV files. The primary actor is the LEGO collector, who also performs local data setup.
+Brick Buster helps a LEGO collector manage complete owned sets, query available pieces and check whether if the collection can build a selected target set. The application uses Python, a graphical interface and a local SQLite database populated from Rebrickable CSV files.
+
+The primary actor is the LEGO Collector who manages the collection, performs searches and build checks and imports local catalogue data. Optional images support identification of catalogue and collection items.
 
 ## Prioritised functional requirements
 
-## Must requirements are compulsory functionality. Should requirements are the selected additions and remain within implementation scope. Could and Won’t requirements are excluded.
+Must requirements provide the compulsory functionality. Should requirements are selected enhancements included in this version. Could requirements are possible future enhancement. Won't requirements are excluded from this version.
 
 | ID | Requirement | Priority | Scope | Use case |
 |---|---|---|---|---|
@@ -19,14 +22,16 @@ Brick Buster helps a LEGO collector manage complete owned sets, query available 
 | FR02 | Search sets by set number or name and optionally filter by theme and year. | Should | Implement | UC02 |
 | FR03 | Add a complete owned set and record a positive whole-number copy quantity. | Must | Implement | UC03 |
 | FR04 | View owned sets and their copy quantities. | Should | Implement | UC04 |
-| FR05 | Update a set’s owned copy quantity. | Should | Implement | UC05 |
+| FR05 | Replace a set's owned copy quantity with a calid positive whole number. | Should | Implement | UC05 |
 | FR06 | Remove a set entry from the collection. | Should | Implement | UC06 |
-| FR07 | Query the total available quantity of a selected part and colour across all owned copies. | Must | Implement | UC07 |
+| FR07 | Search/select a part and color and query the total available quantity across all owned copies. | Must | Implement | UC07 |
 | FR08 | Check whether sufficient matching parts, colours and complete minifigures are available to build one selected target set. | Must | Implement | UC08 |
 | FR09 | Show missing parts and minifigures with identifiers, names, colours where applicable, and required, available and missing quantities. | Should | Implement | UC09 |
 | FR10 | Find all sets buildable from the collection. | Could | Exclude | — |
 | FR11 | Export missing items to CSV. | Could | Exclude | — |
 | FR12 | Purchase missing items or integrate with shopping services. | Won’t | Exclude | — |
+| FR13 | Switch collection, set search, part selection and missing report results between a scrollable list table and a grid with optional thumbnails. | Should | Implement | UC02, UC04, UC07, UC09 |
+| FR14 | Load image links from an original Rebrickable ZIP into existing catalogue records without changing owned quantities or catalogue item identities. | Should | Implement | UC10 |
 
 ## Quality requirements
 
@@ -37,6 +42,7 @@ Brick Buster helps a LEGO collector manage complete owned sets, query available 
 | NFR03 | The GUI uses consistent navigation and gives clear success, empty-result and error messages. | Walk through each use case and inspect its feedback. |
 | NFR04 | Collection queries and build checks work offline after successful data import. | Disconnect the network and perform those operations. |
 | NFR05 | Missing or invalid source data produces a clear error rather than a misleading build result. | Attempt import/checks with missing or invalid required data. |
+| NFR06 | Missing, unsupported or unavailable images show a placeholder and do not prevent result selection, collection actions or calculations. | Open Grid with unavailable image links and verify that records remain selectable and actions remain usable in order to verify cached thumbnails can be reused offline. |
 
 ## Business rules and scope
 
@@ -65,7 +71,14 @@ Brick Buster helps a LEGO collector manage complete owned sets, query available 
 | UC07 | Query Owned Piece Quantity | Catalogue and inventories imported. | Collector selects a part and color then the system totals matching non-spare parts across owned copies and displays the quantity. | None owned: display zero. Missing inventory data: display an error. |
 | UC08 | Check Target Set Buildability | Target selected required inventory data available. | Collector starts the check and the system compares required parts and minifigures with available quantities and displays buildable/not buildable. | Shortages: UC09 extends this use case. Missing data: report that the check cannot be completed. |
 | UC09 | View Missing Pieces Report | UC08 identifies at least one shortage. | System displays all missing parts and complete minifigures, including required, available, and missing quantities. | If no shortage exists, this extension is not triggered. |
+| UC10 | Load Image Links | Catalogue imported and an original Rebrickable ZIP containing the three required image CSVs is accessible. | From the import screen the collector selects the ZIP. The system loads nonblank image links for matching existing records and reports the number updated, preserving catalogue identities and owned quantities. | Missing required CSVs/columns, malformed rows or invalid spare flags: Report an error and roll back image updates. Blank links and unmatched identifiers are skipped. |
 
+## Use case relationships
+
+- UC09 View Missing Items Report. UC08 Check Target Set Buildability when required items are missing.
+- UC10 Load Image Links is an independent optional action available after catalogue import.
+- List/Grid switching and Grid pagination are alternative presentations within UC02, UC04, UC07 and UC09. They do not require a separate actor goal use cases.
+  
 ## Acceptance criteria
 
 1. Adding two copies of a set contributes twice its inventory quantities.
@@ -76,6 +89,6 @@ Brick Buster helps a LEGO collector manage complete owned sets, query available 
 6. Updating/removing a collection entry changes subsequent totals and remains saved after restart.
 7. A search by set number finds the intended set; name searches and theme/year filters narrow the results.
 
-Use case diagram
+## Use case diagram
 
 ![Brick Buster use case diagram](Task-2-Use-Cases.svg)
