@@ -7,31 +7,42 @@ This document analyses the supplied Rebrickable CSV files
 and records the differences from Figure 4 in the assignment.
 
 ### What the files actually contain: 
-| File/table | Data rows | Proposed primary key |
-|---|---:|---|
-| colors | 275 | id |
-| elements | 114,315 | element_id |
-| inventories | 47,597 | id |
-| inventory_minifigs | 25,831 | inventory_id + fig_num |
-| inventory_parts | 1,558,562 | inventory_id + part_num + color_id + is_spare |
-| inventory_sets | 5,212 | inventory_id + set_num |
-| minifigs | 17,229 | fig_num |
-| parts | 64,680 | part_num |
-| part_categories | 76 | id |
-| part_relationships | 37,438 | rel_type + child_part_num + parent_part_num |
-| sets | 28,417 | set_num |
+| CSV table | Data rows | Selected logical primary key |
+| --- | --- | --- |
 | themes | 496 | id |
+| colors | 275 | id |
+| part_categories | 76 | id |
+| parts | 64,898 | part_num |
+| elements | 114,656 | element_id |
+| inventories | 47,781 | id |
+| sets | 28,537 | set_num |
+| minifigs | 17,293 | fig_num |
+| inventory_parts | 1,567,028 | inventory_id, part_num, color_id, is_spare |
+| inventory_sets | 5,214 | inventory_id, set_num |
+| inventory_minifigs | 25,902 | inventory_id, fig_num |
+| part_relationships | 37,536 | rel_type, child_part_num, parent_part_num |
+| part_mappings | 183,055 | part_num, ext_system, ext_id |
+| set_mappings | 71,586 | set_num, ext_system |
+| color_mappings | 846 | id, ext_system, ext_id |
 
 ### Additional columns absent from Figure 4
 
-| CSV file | Additional columns |
-|---|---|
-| parts.csv | part_material |
-| sets.csv | img_url |
-| minifigs.csv | img_url |
-| inventory_parts.csv | img_url |
-| elements.csv | design_id |
-| colors.csv | num_parts, num_sets, y1, y2 |
+| CSV table | Columns absent from Figure 4 |
+| --- | --- |
+| parts | part_material |
+| sets | img_url |
+| minifigs | img_url |
+| inventory_parts | img_url |
+| elements | design_id |
+| colors | num_parts, num_sets, y1, y2 |
+
+None of the twelve Figure 4 tables or their displayed columns is missing from the archive. The headers of themes, part_categories, part_relationships, inventories, inventory_sets and inventory_minifigs match the figure. Three further tables are present:
+
+| Additional table | Actual CSV columns |
+| --- | --- |
+| part_mappings | part_num, ext_system, ext_id, is_export_id, is_import_id |
+| set_mappings | set_num, ext_system, ext_id |
+| color_mappings | id, ext_system, ext_id, ext_descr, is_export_id, is_import_id |
 
 ## Source database ER diagram 
 ```mermaid
