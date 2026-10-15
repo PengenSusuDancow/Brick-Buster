@@ -1,9 +1,13 @@
 ## Task 2 — Requirements Gathering
 
 Project:Brick Buster — ZEIT2105 Assignment 2  
+
 Status:Final — approved by the team  
+
 Prepared: 13 October 2026   
-Revised: 15 October 2026
+
+Revised: 15 October 2026 
+
 Author:Sazmi
 
 ## Purpose and actor
@@ -46,17 +50,14 @@ Must requirements provide the compulsory functionality. Should requirements are 
 
 ## Business rules and scope
 
-- This version assumes owned sets are complete.
-- Owned copy quantities are entered by the user. Multiple instruction booklets do not by themselves establish how many copies are owned.
-- A set’s contribution is multiplied by its owned copy quantity.
-- Parts match exactly by part number and colour. Substitutions are excluded.
-- Minifigures match exactly by `fig_num` and are counted as complete figures. Their component parts are not also added to the loose-part pool.
-- Spare parts are excluded. Pieces from assembled sets are available for reuse, which may require dismantling those sets.
-- One target copy is checked at a time. Checks do not reserve or consume collection pieces.
-- Missing quantity for each item is `max(required - available, 0)`. Buildability requires zero shortage for every required part and minifigure.
-- Exactly one inventory version is used per set or minifigure; inventory versions must not be summed together.
-- Sets represented through `inventory_sets` must have their required contents resolved without omission or double counting.
-- User accounts, loose-piece editing, damaged/incomplete sets and simultaneous build planning are outside this version’s scope.
+- **Collection:** Owned sets are complete and entered copy quantities multiply their contents. Adding increments the quantity, updating replaces it and removal require confirmation.
+- **Matching:** Parts match by part number and color. Complete minifigures match by fig_num. Spare parts and minifigure component parts are excluded from loose part totals.
+- **Inventories:** Use the highest numeric inventory version and multiply nested set contents by their quantities. Missing inventories, cycles or overlapping direct/nested contents produce an error.
+- **Build** **checks:** Check one target copy by using all owned pieces which includes those from assembled sets. Checks do not consume pieces. Every required item must have zero shortage to be buildable.
+- **Fresh results:** Collection changes and catalogue reimports require a new build checks. Optional image link imports update existing records without changing owned quantities.
+- **Search and display:** Searches show up to 500 sets or 300 parts. List uses scrolling while Grid shows up to 12 items per page.
+- **Data import:** Catalogue import accepts the required local CSV or individual CSV ZIP files. Image link import uses a ZIP which contains sets.csv, minifigs.csv and inventory_parts.csv.
+- **Excluded scope:** User accounts, loose piece editing, incomplete sets, simultaneous build planning, automatic entry from instruction photos and shopping integrations are excluded.
 
 ## Use case specifications
 
@@ -81,13 +82,14 @@ Must requirements provide the compulsory functionality. Should requirements are 
   
 ## Acceptance criteria
 
-1. Adding two copies of a set contributes twice its inventory quantities.
-2. A requirement for five red copies of a part is not satisfied by five blue copies.
-3. With five required and three available, the report shows a shortage of two.
-4. Sufficient parts but a missing required minifigure produces “not buildable” and a minifigure shortage.
-5. An empty collection returns zero owned pieces and reports all required target items as missing.
-6. Updating/removing a collection entry changes subsequent totals and remains saved after restart.
-7. A search by set number finds the intended set; name searches and theme/year filters narrow the results.
+1. Two owned copies double inventory quantities. Saved collection changes survive restart and invalid quantities leaves stored data unchanged.
+2. Part colors and minifigures identifies must match exactly. A missing required minifigure produces "NOT BUILDABLE" even when all loose parts are available.
+3. Five required items with three available show two missing. An empty collection returns zero owned quantities and all target requirements as missing.
+4. Totals use the latest inventory, apply nested quantities and exclude spares and minifigure components. Any invalid inventory structures show an error.
+5. Set number/name searches and theme/year filters return matching sets which includes child themes when a parent is selected.
+6. Switching List/Grid preserves selection. A 13 item result uses Grid pages containing 12 items and 1 item.
+7. Unavailable images show placeholders while collection action and calculations remain usable offline. Image link imports preserve identities and owned quantities which is invalid required file structures roll back updates.
+8. Failed catalogue reimports preserve existing data. Any successful reimports or collection changes require a new GUI build chceck.
 
 ## Use case diagram
 
