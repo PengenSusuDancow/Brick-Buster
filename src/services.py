@@ -61,7 +61,12 @@ class SetService:
         clauses = ["(s.set_num LIKE ? ESCAPE '\\' OR s.name LIKE ? ESCAPE '\\')"]
         params = ['%' + text + '%'] * 2
         if theme is not None:
-            clauses.append('s.theme_id=?')
+            clauses.append('''s.theme_id IN (
+                WITH RECURSIVE descendants(id) AS (
+                    SELECT id FROM themes WHERE id=?
+                    UNION
+                    SELECT t.id FROM themes t JOIN descendants d ON t.parent_id=d.id
+                ) SELECT id FROM descendants)''')
             params.append(theme)
         if year is not None:
             clauses.append('s.year=?')

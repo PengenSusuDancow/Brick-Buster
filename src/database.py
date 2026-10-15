@@ -18,9 +18,11 @@ CREATE TABLE IF NOT EXISTS themes (
  parent_id INTEGER REFERENCES themes(id) DEFERRABLE INITIALLY DEFERRED);
 CREATE TABLE IF NOT EXISTS sets (
  set_num TEXT PRIMARY KEY, name TEXT NOT NULL, year INTEGER NOT NULL,
- theme_id INTEGER NOT NULL REFERENCES themes(id), num_parts INTEGER NOT NULL);
+ theme_id INTEGER NOT NULL REFERENCES themes(id), num_parts INTEGER NOT NULL,
+ img_url TEXT NOT NULL DEFAULT '');
 CREATE TABLE IF NOT EXISTS minifigs (
- fig_num TEXT PRIMARY KEY, name TEXT NOT NULL, num_parts INTEGER NOT NULL);
+ fig_num TEXT PRIMARY KEY, name TEXT NOT NULL, num_parts INTEGER NOT NULL,
+ img_url TEXT NOT NULL DEFAULT '');
 CREATE TABLE IF NOT EXISTS parts (part_num TEXT PRIMARY KEY, name TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS colors (id INTEGER PRIMARY KEY, name TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS inventories (
@@ -31,7 +33,7 @@ CREATE TABLE IF NOT EXISTS inventories (
 CREATE TABLE IF NOT EXISTS inventory_parts (
  inventory_id INTEGER REFERENCES inventories(id), part_num TEXT REFERENCES parts(part_num),
  color_id INTEGER REFERENCES colors(id), is_spare INTEGER NOT NULL CHECK(is_spare IN (0,1)),
- quantity INTEGER NOT NULL CHECK(quantity > 0),
+ quantity INTEGER NOT NULL CHECK(quantity > 0), img_url TEXT NOT NULL DEFAULT '',
  PRIMARY KEY(inventory_id, part_num, color_id, is_spare));
 CREATE TABLE IF NOT EXISTS inventory_minifigs (
  inventory_id INTEGER REFERENCES inventories(id), fig_num TEXT REFERENCES minifigs(fig_num),
@@ -48,6 +50,7 @@ CREATE TABLE IF NOT EXISTS import_state (
 INSERT OR IGNORE INTO import_state VALUES (1,0,0,NULL);
 CREATE INDEX IF NOT EXISTS inventory_owner ON inventories(set_num, version);
 CREATE INDEX IF NOT EXISTS figure_owner ON inventories(fig_num, version);
+CREATE INDEX IF NOT EXISTS part_image_lookup ON inventory_parts(part_num, color_id);
 """
 
 
@@ -59,6 +62,12 @@ class DatabaseManager:
         self.connection.row_factory = sqlite3.Row
         self.connection.execute('PRAGMA foreign_keys=ON')
         self.connection.executescript(SCHEMA)
+        # Add image metadata without replacing an existing catalogue or collection.
+        with self.connection:
+            for table in ('sets', 'minifigs', 'inventory_parts'):
+                columns = {r['name'] for r in self.connection.execute(f'PRAGMA table_info({table})')}
+                if 'img_url' not in columns:
+                    self.connection.execute(f"ALTER TABLE {table} ADD COLUMN img_url TEXT NOT NULL DEFAULT ''")
 
     @property
     def generation(self):
@@ -73,6 +82,28 @@ class DatabaseManager:
 
     def read(self, query, params=()):
         return self.connection.execute(query, params).fetchall()
+
+    def image_url(self, item_type, identifier, color_id=None):
+        """Return an existing image URL, or ''. Part colours are exact when supplied.
+
+        item_type: 'set', 'part', or 'minifigure' (case insensitive).
+        Omitting color_id for a part allows any available colour, for previews only.
+        """
+        kind = item_type.lower()
+        if kind == 'set':
+            rows = self.read('SELECT img_url FROM sets WHERE set_num=?', (identifier,))
+        elif kind == 'minifigure':
+            rows = self.read('SELECT img_url FROM minifigs WHERE fig_num=?', (identifier,))
+        elif kind == 'part':
+            query = "SELECT img_url FROM inventory_parts WHERE part_num=? AND img_url<>''"
+            params = [identifier]
+            if color_id is not None:
+                query += ' AND color_id=?'
+                params.append(color_id)
+            rows = self.read(query + ' ORDER BY is_spare,inventory_id,color_id LIMIT 1', params)
+        else:
+            raise ValueError('Image type must be set, part, or minifigure.')
+        return rows[0]['img_url'] if rows else ''
 
     @contextmanager
     def transaction(self):

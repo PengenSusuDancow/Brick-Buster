@@ -7,7 +7,8 @@ import threading
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 from database import DatabaseManager, DataError, ValidationError
-from importer import DataImporter, FILES
+from importer import DataImporter, FILES, load_image_urls
+from views import ImageLoader, ResultView
 from services import SetService, CollectionService, InventoryResolver, BuildService
 
 
@@ -65,6 +66,8 @@ class BrickBusterApp:
         style.configure('Heading.TLabel', font=('Segoe UI', 15, 'bold'))
         style.configure('Treeview', rowheight=29)
         self.db = DatabaseManager(db_path)
+        self.view_mode = tk.StringVar(root, value='List')
+        self.images = ImageLoader(root, self.db.path.parent / 'image_cache')
         self.resolver = InventoryResolver(self.db)
         self.sets = SetService(self.db)
         self.collection = CollectionService(self.db, self.resolver)
@@ -99,6 +102,7 @@ class BrickBusterApp:
         if self.busy:
             messagebox.showinfo('Import running', 'Please wait for the import to finish.', parent=self.root)
             return
+        self.images.close()
         self.db.close()
         self.root.destroy()
 
@@ -108,28 +112,14 @@ class BrickBusterApp:
         if detail:
             ttk.Label(frame, text=detail, wraplength=1000).pack(anchor='w', pady=(0, 12))
 
-    @staticmethod
-    def table(frame, columns, headings, widths=None):
-        wrap = ttk.Frame(frame)
-        wrap.pack(fill='both', expand=True, pady=10)
-        tree = ttk.Treeview(wrap, columns=columns, show='headings', selectmode='browse')
-        for i, (column, heading) in enumerate(zip(columns, headings)):
-            tree.heading(column, text=heading)
-            tree.column(column, width=widths[i] if widths else 140, minwidth=65)
-        ybar = ttk.Scrollbar(wrap, orient='vertical', command=tree.yview)
-        xbar = ttk.Scrollbar(wrap, orient='horizontal', command=tree.xview)
-        tree.configure(yscrollcommand=ybar.set, xscrollcommand=xbar.set)
-        tree.grid(row=0, column=0, sticky='nsew')
-        ybar.grid(row=0, column=1, sticky='ns')
-        xbar.grid(row=1, column=0, sticky='ew')
-        wrap.rowconfigure(0, weight=1)
-        wrap.columnconfigure(0, weight=1)
-        return tree
+    def table(self, frame, columns, headings, widths=None, image_for=None):
+        return ResultView(frame, columns, headings, widths, self.images, self.view_mode,
+                          image_for or (lambda values: self.db.image_url('set', values[0])))
 
     def screen_home(self, frame, context):
         ready = self.db.catalogue_ready()
         self.heading(frame, 'Your LEGO collection',
-                     'Catalogue ready. All features work offline.' if ready else
+                     'Collection and calculations work offline. Images need internet until cached.' if ready else
                      'Catalogue not ready. Import the CSV files to begin.')
         for label, screen in [('My collection', 'collection'), ('Search and filter sets', 'search'),
                               ('Query owned piece', 'piece'), ('Check target set', 'build'),
@@ -156,13 +146,13 @@ class BrickBusterApp:
         browse_button.pack(side='left', padx=8)
         ttk.Label(frame, text='Required: ' + ', '.join(t + '.csv' for t in FILES),
                   wraplength=950).pack(anchor='w', pady=14)
-        def start():
+        def start(image_archive=None):
             context['folder'] = folder.get()
-            if not folder.get().strip():
+            if image_archive is None and not folder.get().strip():
                 self.show_feedback('error', 'Choose a CSV folder first.')
                 return
             self.busy = True
-            for widget in (entry, browse_button, start_button):
+            for widget in (entry, browse_button, start_button, images_button):
                 widget.configure(state='disabled')
             progress.start(15)
             self.show_feedback('info', 'Validating files…')
@@ -170,9 +160,13 @@ class BrickBusterApp:
                 worker_db = None
                 try:
                     worker_db = DatabaseManager(self.db.path)
-                    counts = DataImporter(worker_db).publish_atomically(
-                        context['folder'], lambda msg: self.events.put(('progress', msg)))
-                    self.events.put(('success', counts))
+                    if image_archive is not None:
+                        counts = load_image_urls(worker_db, image_archive)
+                        self.events.put(('images', counts))
+                    else:
+                        counts = DataImporter(worker_db).publish_atomically(
+                            context['folder'], lambda msg: self.events.put(('progress', msg)))
+                        self.events.put(('success', counts))
                 except Exception as exc:
                     self.events.put(('failure', str(exc)))
                 finally:
@@ -189,9 +183,13 @@ class BrickBusterApp:
                     else:
                         self.busy = False
                         progress.stop()
-                        for widget in (entry, browse_button, start_button):
+                        for widget in (entry, browse_button, start_button, images_button):
                             widget.configure(state='normal')
-                        if kind == 'success':
+                        images_button.configure(state='normal' if self.db.catalogue_ready() else 'disabled')
+                        if kind == 'images':
+                            self.show_feedback('info', f'Image links loaded: {sum(payload.values()):,} rows. '
+                                               'Open a results screen and choose Grid.')
+                        elif kind == 'success':
                             self.on_collection_or_import_change()
                             self.show_feedback('info', f'Import complete: {sum(payload.values()):,} rows. '
                                                'Catalogue ready; saved collection retained.')
@@ -202,6 +200,17 @@ class BrickBusterApp:
                 self.root.after(100, poll)
         start_button = ttk.Button(frame, text='Validate and import', command=start)
         start_button.pack(anchor='w', pady=10)
+        def choose_images():
+            archive = filedialog.askopenfilename(parent=self.root, title='Choose Rebrickable all_downloads.zip',
+                                                filetypes=[('ZIP archive', '*.zip')])
+            if archive:
+                start(archive)
+        images_button = ttk.Button(frame, text='Load image links from Rebrickable ZIP…', command=choose_images,
+                                   state='normal' if self.db.catalogue_ready() else 'disabled')
+        images_button.pack(anchor='w', pady=10)
+        ttk.Label(frame, text='For older CSVs without image links, select all_downloads.zip. '
+                  'Only existing catalogue items are updated; your collection is retained.',
+                  wraplength=950).pack(anchor='w')
         progress = ttk.Progressbar(frame, mode='indeterminate')
         progress.pack(fill='x', pady=12)
 
@@ -336,7 +345,8 @@ class BrickBusterApp:
         row.pack(fill='x')
         ttk.Label(row, text='Find part by number or name').pack(side='left')
         ttk.Entry(row, textvariable=search, width=48).pack(side='left', padx=8)
-        tree = self.table(frame, ('part', 'name'), ('Part number', 'Name'), (160, 700))
+        tree = self.table(frame, ('part', 'name'), ('Part number', 'Name'), (160, 700),
+                          image_for=lambda values: self.db.image_url('part', values[0], colors.get(color.get(), -1)))
         def find():
             context['search'] = search.get()
             text = search.get().strip().replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_')
@@ -352,7 +362,12 @@ class BrickBusterApp:
         bottom = ttk.Frame(frame)
         bottom.pack(fill='x')
         ttk.Label(bottom, text='Colour').pack(side='left')
-        ttk.Combobox(bottom, textvariable=color, values=list(colors), state='readonly', width=40).pack(side='left', padx=8)
+        color_picker = ttk.Combobox(bottom, textvariable=color, values=list(colors), state='readonly', width=40)
+        color_picker.pack(side='left', padx=8)
+        def change_color(event=None):
+            context['color'] = color.get()
+            tree.refresh()
+        color_picker.bind('<<ComboboxSelected>>', change_color)
         def check():
             def action():
                 if not tree.selection() or color.get() not in colors:
@@ -407,9 +422,14 @@ class BrickBusterApp:
             ttk.Label(frame, text='This result is out of date. Run the build check again.').pack(anchor='w')
             return
         ttk.Label(frame, text=f'Target: {result.target} | Copies checked: 1').pack(anchor='w')
+        def missing_image(values):
+            if values[0] == 'Minifigure':
+                return self.db.image_url('minifigure', values[1])
+            colors = self.db.read('SELECT id FROM colors WHERE name=?', (values[3],))
+            return self.db.image_url('part', values[1], colors[0][0]) if len(colors) == 1 else ''
         tree = self.table(frame, ('type', 'id', 'name', 'color', 'required', 'available', 'missing'),
                           ('Type', 'Identifier', 'Name', 'Colour', 'Required', 'Available', 'Missing'),
-                          (100, 120, 330, 150, 90, 90, 90))
+                          (100, 120, 330, 150, 90, 90, 90), image_for=missing_image)
         for row in self.build.missing_items(result):
             tree.insert('', 'end', values=astuple(row))
         ttk.Button(frame, text='Back to build result',

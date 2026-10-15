@@ -20,6 +20,12 @@ FILES = {
     'inventory_minifigs': ('inventory_id', 'fig_num', 'quantity'),
     'inventory_sets': ('inventory_id', 'set_num', 'quantity'),
 }
+IMAGE_KEYS = {
+    'sets': ('set_num',),
+    'minifigs': ('fig_num',),
+    'inventory_parts': ('inventory_id', 'part_num', 'color_id', 'is_spare'),
+}
+
 INTS = {'id', 'parent_id', 'year', 'theme_id', 'num_parts', 'version',
         'inventory_id', 'color_id', 'quantity'}
 
@@ -143,6 +149,8 @@ class DataImporter:
                 for table, fields in FILES.items():
                     progress('Importing ' + table + '...')
                     columns = list(fields)
+                    if table in IMAGE_KEYS:
+                        columns.append('img_url')
                     if table == 'inventories':
                         columns.append('fig_num')
                     sql = f'INSERT INTO {table} ({",".join(columns)}) VALUES ({",".join("?" for _ in columns)})'
@@ -154,6 +162,8 @@ class DataImporter:
                                 if None in row or any(v is None for v in row.values()):
                                     raise DataError('Row width does not match the header.')
                                 values = self._values(row, fields)
+                                if table in IMAGE_KEYS:
+                                    values.append((row.get('img_url') or '').strip())
                                 if table == 'sets':
                                     known_sets.add(row['set_num'])
                                 elif table == 'minifigs':
@@ -183,3 +193,58 @@ class DataImporter:
             return counts
         except (sqlite3.Error, OSError, zipfile.BadZipFile, UnicodeError, csv.Error) as exc:
             raise DataError(f'Import failed: {exc}') from exc
+
+
+def load_image_urls(db, archive_path):
+    """Add image URLs from an original Rebrickable ZIP to existing rows only.
+
+    Returns updated-row counts by table. Blank URLs leave existing metadata intact.
+    No catalogue IDs, quantities, ownership, readiness or generation are changed.
+    Missing/invalid files roll back all image updates.
+    """
+    counts = {}
+    try:
+        with zipfile.ZipFile(archive_path) as archive:
+            members = {}
+            for table, keys in IMAGE_KEYS.items():
+                matches = [name for name in archive.namelist()
+                           if Path(name).name == table + '.csv' and not name.endswith('/')]
+                if len(matches) != 1:
+                    raise DataError(f'Archive must contain exactly one {table}.csv.')
+                members[table] = matches[0]
+            with db.transaction() as conn:
+                for table, keys in IMAGE_KEYS.items():
+                    existing = {tuple(str(value) for value in row) for row in
+                                conn.execute(f'SELECT {",".join(keys)} FROM {table}')}
+                    query = f'UPDATE {table} SET img_url=? WHERE ' + ' AND '.join(key + '=?' for key in keys)
+                    batch, count = [], 0
+                    with archive.open(members[table]) as raw:
+                        with io.TextIOWrapper(raw, encoding='utf-8-sig', newline='') as stream:
+                            reader = csv.DictReader(stream)
+                            fields = reader.fieldnames or []
+                            if len(fields) != len(set(fields)) or not set(keys + ('img_url',)).issubset(fields):
+                                raise DataError(f'{table}.csv: missing or duplicate image/key columns.')
+                            for line, row in enumerate(reader, 2):
+                                if None in row or any(value is None for value in row.values()):
+                                    raise DataError(f'{table}.csv, row {line}: row width does not match header.')
+                                key = []
+                                for field in keys:
+                                    value = row[field]
+                                    if field == 'is_spare':
+                                        if value not in ('True', 'False'):
+                                            raise DataError(f'{table}.csv, row {line}: invalid is_spare.')
+                                        value = '1' if value == 'True' else '0'
+                                    key.append(value)
+                                url = row['img_url'].strip()
+                                if tuple(key) in existing and url:
+                                    batch.append((url, *key))
+                                    count += 1
+                                    if len(batch) == 2000:
+                                        conn.executemany(query, batch)
+                                        batch.clear()
+                            if batch:
+                                conn.executemany(query, batch)
+                    counts[table] = count
+        return counts
+    except (sqlite3.Error, OSError, zipfile.BadZipFile, UnicodeError, csv.Error) as exc:
+        raise DataError(f'Image metadata import failed: {exc}') from exc
