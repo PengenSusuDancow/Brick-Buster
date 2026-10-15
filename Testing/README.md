@@ -1,8 +1,5 @@
 # Brick Buster testing
 
-Reviewed against GitHub `main` at commit
-`b6cb35cb9f4b6902cd0b1142253f20c48838ff64` on 15 October 2026.
-
 The assignment requires working CSV import, adding owned sets, piece quantities
 and target buildability. This suite also covers the selected FR01-FR09 and
 NFR01-NFR05 requirements, plus the implemented image and list/grid features.
@@ -111,10 +108,3 @@ someone performs them. Tests use confirmed set IDs and ownership quantities.
 Run the automated commands again after changing `src`. Keep actual test results
 and screenshots with your project evidence. The assignment's live demonstration
 and team review remain separate from this test-suite run.
-
-For AI-assisted tests, retain screenshots of the actual prompts and outputs in
-GitHub and substantially develop/edit the material as a team, as required by the
-assignment. Automated test passes do not establish that this work has been done.
-
-Sources: `Ass_02.pdf`, pages 1, 3-4; `Requirements/Task-2-Requirements.md`;
-`src/README.md` and the application code at the revision identified above.
