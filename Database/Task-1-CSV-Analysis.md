@@ -162,18 +162,33 @@ erDiagram
     }
 ```
 
-### Key and relationship explanations 
-- `inventory_parts` uses the composite key
-  `(inventory_id, part_num, color_id, is_spare)`.
-  Including `is_spare` distinguishes normal and spare entries
-  for the same part and colour in an inventory.
-- `inventories.set_num` can identify either a set or a minifigure.
-  This differs from Figure 4, which shows only the set relationship.
-- `inventory_sets.set_num` identifies a set contained in an
-  inventory, rather than the inventory's owner.
-- `themes.parent_id` is optional because root themes have no parent.
-- Set, part and minifigure identifiers are stored as text to
-  preserve letters, hyphens and leading zeroes.
+## Relationship register
+
+Read each row as a child field referencing a parent key. Multiplicities describe the logical model, not exact current counts per parent. The R03/R04 pair and R19/R20 pair each require exactly one branch.
+
+| ID | Child reference -> parent key | Parent per child | Children per parent |
+| --- | --- | --- | --- |
+| R01 | themes.parent_id -> themes.id | 0..1 | 0..* |
+| R02 | sets.theme_id -> themes.id | 1 | 0..* |
+| R03 | inventories.set_num -> sets.set_num | 0..1 | 0..* |
+| R04 | inventories.set_num -> minifigs.fig_num | 0..1 | 0..* |
+| R05 | inventory_parts.inventory_id -> inventories.id | 1 | 0..* |
+| R06 | inventory_parts.part_num -> parts.part_num | 1 | 0..* |
+| R07 | inventory_parts.color_id -> colors.id | 1 | 0..* |
+| R08 | inventory_sets.inventory_id -> inventories.id | 1 | 0..* |
+| R09 | inventory_sets.set_num -> sets.set_num | 1 | 0..* |
+| R10 | inventory_minifigs.inventory_id -> inventories.id | 1 | 0..* |
+| R11 | inventory_minifigs.fig_num -> minifigs.fig_num | 1 | 0..* |
+| R12 | parts.part_cat_id -> part_categories.id | 1 | 0..* |
+| R13 | elements.part_num -> parts.part_num | 1 | 0..* |
+| R14 | elements.color_id -> colors.id | 1 | 0..* |
+| R15 | part_relationships.child_part_num -> parts.part_num | 1 | 0..* |
+| R16 | part_relationships.parent_part_num -> parts.part_num | 1 | 0..* |
+| R17 | part_mappings.part_num -> parts.part_num | 1 | 0..* |
+| R18 | color_mappings.id -> colors.id | 1 | 0..* |
+| R19 | set_mappings.set_num -> sets.set_num | 0..1 | 0..* |
+| R20 | set_mappings.set_num -> minifigs.fig_num | 0..1 | 0..* |
+
 
 ### Diagram notation
 
