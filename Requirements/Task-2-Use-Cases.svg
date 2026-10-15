@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="1040" viewBox="0 0 1180 1040" role="img" aria-labelledby="diagram-title diagram-desc">
+<title id="diagram-title">Brick Buster use case diagram</title>
+<desc id="diagram-desc">LEGO Collector interacts with UC01 to UC08 and UC10. UC09 View Missing Items Report extends UC08 Check Target Set Buildability when required items are missing.</desc>
+<rect width="1180" height="1040" fill="white"/>
+<g font-family="Arial,sans-serif" font-size="18" fill="#17212b" stroke="#17212b" stroke-width="1.5">
+<rect x="300" y="30" width="850" height="980" fill="none" stroke-width="2"/>
+<text x="725" y="68" text-anchor="middle" stroke="none" font-size="24">Brick Buster — Use Case Diagram</text>
+<circle cx="105" cy="395" r="22" fill="none" stroke-width="2"/>
+<path d="M105 417V490 M60 450H150 M105 490L70 540 M105 490L140 540" fill="none" stroke-width="2"/>
+<text x="105" y="573" text-anchor="middle" stroke="none">LEGO Collector</text>
+<line x1="150" y1="450" x2="360" y2="120" stroke="#66727e" stroke-width="1.3"/>
+<line x1="150" y1="450" x2="360" y2="200" stroke="#66727e" stroke-width="1.3"/>
+<line x1="150" y1="450" x2="360" y2="280" stroke="#66727e" stroke-width="1.3"/>
+<line x1="150" y1="450" x2="360" y2="360" stroke="#66727e" stroke-width="1.3"/>
+<line x1="150" y1="450" x2="360" y2="440" stroke="#66727e" stroke-width="1.3"/>
+<line x1="150" y1="450" x2="360" y2="520" stroke="#66727e" stroke-width="1.3"/>
+<line x1="150" y1="450" x2="360" y2="600" stroke="#66727e" stroke-width="1.3"/>
+<line x1="150" y1="450" x2="360" y2="680" stroke="#66727e" stroke-width="1.3"/>
+<path d="M150 450H210V930H360" fill="none" stroke="#66727e" stroke-width="1.3"/>
+<ellipse cx="640" cy="120" rx="280" ry="31" fill="#f5f8fc"/>
+<text x="640" y="126" text-anchor="middle" stroke="none">UC01: Import Rebrickable Data</text>
+<ellipse cx="640" cy="200" rx="280" ry="31" fill="#f5f8fc"/>
+<text x="640" y="206" text-anchor="middle" stroke="none">UC02: Search and Filter Sets</text>
+<ellipse cx="640" cy="280" rx="280" ry="31" fill="#f5f8fc"/>
+<text x="640" y="286" text-anchor="middle" stroke="none">UC03: Add Owned Set</text>
+<ellipse cx="640" cy="360" rx="280" ry="31" fill="#f5f8fc"/>
+<text x="640" y="366" text-anchor="middle" stroke="none">UC04: View Collection</text>
+<ellipse cx="640" cy="440" rx="280" ry="31" fill="#f5f8fc"/>
+<text x="640" y="446" text-anchor="middle" stroke="none">UC05: Update Owned Quantity</text>
+<ellipse cx="640" cy="520" rx="280" ry="31" fill="#f5f8fc"/>
+<text x="640" y="526" text-anchor="middle" stroke="none">UC06: Remove Owned Set</text>
+<ellipse cx="640" cy="600" rx="280" ry="31" fill="#f5f8fc"/>
+<text x="640" y="606" text-anchor="middle" stroke="none">UC07: Query Owned Piece Quantity</text>
+<ellipse cx="640" cy="680" rx="280" ry="31" fill="#f5f8fc"/>
+<text x="640" y="686" text-anchor="middle" stroke="none">UC08: Check Target Set Buildability</text>
+<ellipse cx="820" cy="800" rx="280" ry="31" fill="#f5f8fc"/>
+<text x="820" y="806" text-anchor="middle" stroke="none">UC09: View Missing Items Report</text>
+<path d="M820 769V742H720V710" fill="none" stroke-dasharray="6 4"/>
+<path d="M714 719L720 710L726 719" fill="none"/>
+<text x="970" y="729" text-anchor="middle" stroke="none" font-size="16">«extend»</text>
+<text x="970" y="751" text-anchor="middle" stroke="none" font-size="15">[required items missing]</text>
+<ellipse cx="640" cy="930" rx="280" ry="31" fill="#f5f8fc"/>
+<text x="640" y="936" text-anchor="middle" stroke="none">UC10: Load Image Links</text>
+</g>
+</svg>
