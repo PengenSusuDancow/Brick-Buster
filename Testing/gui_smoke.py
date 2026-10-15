@@ -1,4 +1,4 @@
-"""Run separately on a desktop: python Testing/gui_smoke.py"""
+"""Run separately: python Testing/gui_smoke.py"""
 from pathlib import Path
 from io import BytesIO
 import sys
@@ -26,7 +26,6 @@ def descendants(widget):
 class GuiTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        # Tk on macOS is more reliable with one main window per process.
         cls.root = tk.Tk()
         cls.root.withdraw()
 
