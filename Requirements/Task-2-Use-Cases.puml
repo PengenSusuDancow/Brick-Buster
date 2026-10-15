@@ -12,6 +12,7 @@ rectangle "Brick Buster" {
   usecase "UC07: Query Owned Piece Quantity" as UC07
   usecase "UC08: Check Target Set Buildability" as UC08
   usecase "UC09: View Missing Pieces Report" as UC09
+  usecase "UC10: Load Image Links" as UC10
 }
 Collector -- UC01
 Collector -- UC02
@@ -21,5 +22,6 @@ Collector -- UC05
 Collector -- UC06
 Collector -- UC07
 Collector -- UC08
+Collector -- UC10
 UC09 ..> UC08 : <<extend>>\n[required items missing]
 @enduml
