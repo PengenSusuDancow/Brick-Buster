@@ -190,14 +190,9 @@ Read each row as a child field referencing a parent key. Multiplicities describe
 | R20 | set_mappings.set_num -> minifigs.fig_num | 0..1 | 0..* |
 
 
-### Diagram notation
+### Notation
 
-- PK means primary key; FK means foreign key.
-- Multiple PK fields together form one composite key.
-- `||` means exactly one; `o|` means zero or one;
-  `o{` means zero or many.
-- The two inventory-owner relationships are exclusive alternatives:
-  each inventory belongs to exactly one set OR one minifigure.
+PK marks the selected logical primary key; multiple PK markers form one composite key. FK marks an ordinary validated reference; REF marks the conditional set/minifigure reference. UML end labels mean 1 exactly one, 0..1 optional one, and 0..* zero or many. Solid lines indicate that the parent key contributes to the selected child key; dashed lines are non-identifying. Crossings are not joins. In the editable Mermaid version, |o on the left and o| on the right both mean zero or one. The same cardinalities, key fields, identifying lines and XOR labels are used.
 
 ### Scope
 
